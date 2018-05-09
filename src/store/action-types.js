@@ -14,3 +14,6 @@ export const SET_USER_INFO = "SET_USER_INFO";
 //获取水果列表
 export const SET_FRUITS = 'SET_FRUITS';
 export const SET_FRUITS_SUCCESS = 'SET_FRUITS_SUCCESS';
+
+//获取详情页
+export const DETAILS_FRUIT = "DETAILS_FRUIT";

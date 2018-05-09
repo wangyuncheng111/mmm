@@ -13,12 +13,14 @@ let initState = {
         offset: 0,// 偏移量
         lists: [] // 所有的数据
     },
-    fruits:{
+    fruits: {
         hasMore: true,
         limit: 5,
         offset: 0,
         loading: true,
-        lists: []
+        lists: [],
+        check: true,
+        detail:[]
     }
 };
 export default function home(state = initState, action) {
@@ -30,28 +32,31 @@ export default function home(state = initState, action) {
         case Types.SET_SLIDERS_SUCCESS:
             return {...state, slider: {lists: action.payload, loading: false}};
         case Types.SET_FRUITS:
-            return {...state, fruits:{ ...state.fruits, loading: true}};
+            return {...state, fruits: {...state.fruits, loading: true}};
 
         case Types.SET_FRUITS_SUCCESS:
             return {
                 ...state,
-                fruits: {
-                    ...state.fruits,
-                    loading: false,
-                    hasMore: action.payload.hasMore,
-                    lists:action.payload.fruits
-                }
-            };
+            fruits: {
+        ...state.fruits,
+                loading: false,
+                hasMore: action.payload.hasMore,
+                lists: action.payload.fruits
+        }
+    };
+        case Types.DETAILS_FRUIT:
+            console.log(action.payload,'asd');
+            return {...state,fruits:{...state.fruits,detail:action.payload[0]}};
 
         case Types.CLEAR_LESSON:
             return {
                 ...state,
-                lesson:{
+                lesson: {
                     ...state.lesson,
-                    loading:false,
-                    hasMore:true,
-                    offset:0,
-                    lists:[]
+                    loading: false,
+                    hasMore: true,
+                    offset: 0,
+                    lists: []
                 }
             }
     }

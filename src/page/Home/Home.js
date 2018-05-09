@@ -25,9 +25,12 @@ class Home extends React.Component {
 
         // pullRefresh(this.content.current,this.props.refresh)
     }
-
+    shopCart = () =>{
+       this.props.setFruitsDetail(4);
+        console.log(this.props.fruits.detail,'detail');
+    };
     render() {
-        console.log(this.props.fruits.lists,'qqq');
+        // console.log(this.props.fruits.lists,'qqq');
         return (
             <div className='home full'>
                 <div className="title">
@@ -63,7 +66,7 @@ class Home extends React.Component {
                     <div className='home-list'>
                     </div>
                 </div>
-
+                <button className='bttn' onClick={this.shopCart} >购物车</button>
             </div>
         )
     }

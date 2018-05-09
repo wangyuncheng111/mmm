@@ -7,3 +7,6 @@ export function getSlider() {
 export function getFruits(offset,limit) {
     return axios.get(`/list?offset=${offset}&limit=${limit}`)
 }
+export function getFruitsDetail(id) {
+    return axios.get('/detail?id='+id)
+}
