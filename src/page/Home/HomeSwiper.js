@@ -6,6 +6,7 @@ export default class HomeSwiper extends React.Component{
         index:0
     }
     render(){
+        console.log(this.props.lists[0]);
         let opts = {
             continuous: true,auto:1000,
             transitionEnd:(index)=>{
@@ -20,13 +21,15 @@ export default class HomeSwiper extends React.Component{
                 ))}
             </ReactSwipe>
                 <div className="dots">
-                    {this.props.lists.map((item, index) => (
-                        <span key={index} className={index===this.state.index?'active':''}></span>
-                    ))}
+                    <span>{this.props.lists.map((item,index)=>(index+1))+'/'+this.props.lists.length}</span>
                 </div>
             </div>
         )
     }
 }
 
-
+/*
+{this.props.lists.map((item, index) => (
+ <span key={index} className={index===this.state.index?'active':''}>{index/this.props.lists.length}</span>
+ ))}
+ */

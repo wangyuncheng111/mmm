@@ -3,14 +3,19 @@ import React from 'react';
 import './index.less';
 import {connect} from 'react-redux';
 import actions from "src/store/actions/home";
-import HomeSwiper from './HomeSwiper'
-// import {loadMore,pullRefresh} from '../../common/util'
-// import Loading from '../../components/Loading/Loading';
-// import {Link} from 'react-router-dom';
+import HomeSwiper from './HomeSwiper';
+import {getFruits} from '../../api/home';
+import {loadMore,pullRefresh} from '../../common/util';
+import '../../common/swiper.min';
+import Loading from '../../components/Loading/Loading';
+import {Link} from 'react-router-dom';
 class Home extends React.Component {
     constructor(){
         super();
-        this.content = React.createRef()
+        this.content = React.createRef();
+        this.shopping = React.createRef();
+        this.gouwu = React.createRef();
+        this.state={number:0}
     }
     chooseLesson = (val) => {
         //将当前的课程存入到redux中
@@ -21,13 +26,38 @@ class Home extends React.Component {
         if (this.props.setSlider.length === 0) {
             this.props.setSlider();
         }
+        if (this.props.lesson.lists.length === 0) {
+            this.props.setLessonList()
+        };
         this.props.setFruitsList();
-
-        // pullRefresh(this.content.current,this.props.refresh)
+        loadMore(this.content.current,this.loadMore);
+        pullRefresh(this.content.current,this.props.refresh);
     }
-
-    render() {
-        console.log(this.props.fruits.lists,'qqq');
+    handleClick=()=>{
+        console.log(this.shopping.current.style);
+        this.setState({number:this.state.number+1});
+        console.log(this.state.number);
+        if(this.state.number>-1){
+            this.shopping.current.style.display='none';
+            this.gouwu.current.style.display='block';
+        }
+    };
+    handleMinus=()=>{
+        if(this.state.number>0){
+            this.setState({number:this.state.number-1})
+        }else {
+            this.setState({number:0});
+        }
+        if(this.state.number<2){
+            this.gouwu.current.style.display='none';
+            this.shopping.current.style.display='block';
+        }
+    };
+    handleAdd=()=>{
+        this.setState({number:this.state.number+1})
+    };
+    render(){
+        console.log(this.props.fruits.lists);
         return (
             <div className='home full'>
                 <div className="title">
@@ -37,37 +67,79 @@ class Home extends React.Component {
                     </div>
                     <i className="iconfont icon-suosou sousuo"></i>
                 </div>
-                <div className="nav">
-                    <ul>
-                        <li><a href="">热卖</a></li>
-                        <li><a href="">水果</a></li>
-                        <li><a href="">蔬菜</a></li>
-                        <li><a href="">乳品</a></li>
-                        <li><a href="">肉蛋</a></li>
-                        <li><a href="">零食</a></li>
-                        <li><a href="">酒饮</a></li>
-                        <li><a href="">热卖</a></li>
-                        <li><a href="">水果</a></li>
-                        <li><a href="">蔬菜</a></li>
-                        <li><a href="">乳品</a></li>
-                        <li><a href="">肉蛋</a></li>
-                        <li><a href="">零食</a></li>
-                        <li><a href="">酒饮</a></li>
-                    </ul>
+                <div className="nav swiper-container">
+                    <div className="swiper-wrapper nav-list">
+                        <div className="swiper-slide nav-list-item">热卖</div>
+                        <div className="swiper-slide nav-list-item">水果</div>
+                        <div className="swiper-slide nav-list-item">蔬菜</div>
+                        <div className="swiper-slide nav-list-item">乳品</div>
+                        <div className="swiper-slide nav-list-item">肉蛋</div>
+                        <div className="swiper-slide nav-list-item">零食</div>
+                        <div className="swiper-slide nav-list-item">热卖</div>
+                        <div className="swiper-slide nav-list-item">水果</div>
+                        <div className="swiper-slide nav-list-item">蔬菜</div>
+                        <div className="swiper-slide nav-list-item">乳品</div>
+                        <div className="swiper-slide nav-list-item">肉蛋</div>
+                        <div className="swiper-slide nav-list-item">零食</div>
+                    </div>
+                    <i className="iconfont icon-ai-module module"></i>
                 </div>
                 <div className='content' ref={this.content}>
                     {this.props.slider.lists.length > 0 ?
                         <HomeSwiper
                             lists={this.props.slider.lists}
                         /> : <div>正在加载中...</div>}
+                        <div className="hot"><img src="https://image.missfresh.cn/category_group_images/9C4AA17328E11D63114D767A15DA6852.PNG" alt=""/></div>
                     <div className='home-list'>
+                        {this.props.fruits.lists.map((item,index)=>(
+                            <div key={index} className="content-list-item">
+                                <div className="item-img">
+                                    <div className="item-img-left">
+                                        <img src={item.imgB} alt=""/>
+                                    </div>
+                                    <div className="item-img-big">
+                                        <img src={item.imgS} alt=""/>
+                                    </div>
+                                </div>
+                                <div className="list-detail">
+                                    <span className="detail-title">{item.title}</span>
+                                    <span className="detail-describe">{item.describe}</span>
+                                    <span className="detail-text">{item.text}</span><br/>
+                                    <span className="detail-price">{item.price}</span>
+                                    <i ref={this.shopping} className="iconfont icon-gouwuche icon" onClick={this.handleClick}></i>
+                                    <div ref={this.gouwu} className="gouwu"><button className="left-button" onClick={this.handleMinus}>-</button>{Math.max(0,this.state.number)}<button className="right-button" onClick={this.handleAdd}>+</button></div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
-
             </div>
         )
     }
-}
+    }
 
-export default connect(state => state.home, actions)(Home)
 
+
+export default connect(state => state.home, actions)(Home);
+
+/*Id
+ :
+ "1"
+ 2describe
+ :
+ "长满皱纹是为了让你好剥"
+ imgB
+ :
+ "https://image.missfresh.cn/0f9c63aa9e734a4c8f84eb82967e9f60.jpg?iopcmd=thumbnail&type=4&width=200"
+ imgS
+ :
+ "https://j-image.missfresh.cn/img_20170605114504990.png"
+ 4price
+ :
+ "￥9.9"
+ 3text
+ :
+ "100%品控检测"
+ 1title
+ :
+ "四川不知火丑柑200-300g*2个"*/
