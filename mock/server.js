@@ -34,6 +34,13 @@ app.get('/list', function (req, res) {
     return res.json({fruits, hasMore});
 });
 
+app.get('/detail',function (req,res) {
+    let {id} = req.query;
+    let fruit = fruits.filter(item=>item.Id == id);
+    res.json(fruit)
+});
+
+
 
 let userList = [];
 // 登录成功后 {error:0,msg:'登录成功了',user:'xxxx'}
